@@ -1,0 +1,35 @@
+---
+
+- name: Test if folder exist
+  stat:
+    path: "{{ intellij_dir }}"
+  register: intellij_exist
+
+- name: Download intelliJ archive
+  get_url:
+    url: https://download.jetbrains.com/idea/ideaIC-{{ intellij_version }}.tar.gz
+    dest: "{{ intellij_archive }}"
+  when: intellij_exist.stat.exists == False
+
+- name: Decompress intelliJ archive
+  unarchive:
+    src: "{{ intellij_archive }}"
+    dest: "{{ intellij_install_dir }}"
+    copy: no
+  when: intellij_exist.stat.exists == False
+
+- name: Move intelliJ folder
+  shell:
+    mv {{ intellij_install_dir }}/idea-IC-* {{ intellij_dir }}
+    creates="{{ intellij_dir }}"
+
+- name: Create symlink
+  file:
+    src: "{{ intellij_dir }}/bin/idea.sh"
+    dest: "{{ intellij_bin }}"
+    state: link
+
+- name: Remove intelliJ archive
+  file:
+    path: "{{ intellij_archive }}"
+    state: absent

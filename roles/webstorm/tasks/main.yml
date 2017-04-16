@@ -1,0 +1,35 @@
+---
+
+- name: Test if folder exist
+  stat:
+    path: "{{ webstorm_dir }}"
+  register: webstorm_exist
+
+- name: Download webStorm archive
+  get_url:
+    url: https://download.jetbrains.com/webstorm/WebStorm-{{ webstorm_version }}.tar.gz
+    dest: "{{ webstorm_archive }}"
+  when: webstorm_exist.stat.exists == False
+
+- name: Decompress webStorm archive
+  unarchive:
+    src: "{{ webstorm_archive }}"
+    dest: "{{ webstorm_install_dir }}"
+    copy: no
+  when: webstorm_exist.stat.exists == False
+
+- name: Move webStorm folder
+  shell:
+    mv {{ webstorm_install_dir }}/WebStorm-* {{ webstorm_dir }}
+    creates="{{ webstorm_dir }}"
+
+- name: Create symlink
+  file:
+    src: "{{ webstorm_dir }}/bin/webstorm.sh"
+    dest: "{{ webstorm_bin }}"
+    state: link
+
+- name: Remove webStorm archive
+  file:
+    path: "{{ webstorm_archive }}"
+    state: absent

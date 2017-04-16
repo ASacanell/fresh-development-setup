@@ -1,0 +1,27 @@
+---
+- name: Test if folder exist
+  stat:
+    path: ~/.nvm
+  register: nvm_exist
+
+- name: Install nvm
+  become_user: "{{ user }}"
+  git: 
+    repo: https://github.com/creationix/nvm.git 
+    dest: ~/.nvm
+  register: installation
+  when: nvm_exist.stat.exists == False
+
+- name: Source nvm in ~/.profile
+  become_user: "{{ user }}"
+  lineinfile: 
+    path: ~/.zshrc
+    line: "source ~/.nvm/nvm.sh"
+    create: yes
+  when: installation|success
+
+- name: Install {{ node_version }}
+  become_user: "{{ user }}"
+  shell: source ~/.zshrc && nvm install {{ node_version | quote }}
+  args:
+    executable: /bin/zsh

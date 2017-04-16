@@ -1,0 +1,7 @@
+---
+
+- name: Install docker for Manjaro
+  pacman:
+    name: docker
+    state: latest
+  when: ansible_distribution == 'Manjaro Linux'

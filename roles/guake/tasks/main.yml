@@ -1,0 +1,24 @@
+---
+
+- name: Install Guake for Manjaro
+  pacman: 
+    name: guake
+    state: latest
+  register: installation
+  when: ansible_distribution == 'Manjaro Linux'
+
+- name: Install Guake for Ubuntu or Debian
+  apt:
+    name: guake
+    state: latest
+  register: installation
+  when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'
+
+- name: Add Guake to Autostartup
+  file:
+    src: /usr/share/applications/guake.desktop
+    dest: /etc/xdg/autostart/guake.desktop
+    state: link
+  when: installation|success
+
+

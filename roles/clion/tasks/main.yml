@@ -1,0 +1,35 @@
+---
+
+- name: Test if folder exist
+  stat:
+    path: "{{ clion_dir }}"
+  register: clion_exist
+
+- name: Download CLion archive
+  get_url:
+    url: http://download.jetbrains.com/cpp/CLion-{{ clion_version }}.tar.gz
+    dest: "{{ clion_archive }}"
+  when: clion_exist.stat.exists == False
+
+- name: Decompress CLion archive
+  unarchive:
+    src: "{{ clion_archive }}"
+    dest: "{{ clion_install_dir }}"
+    copy: no
+  when: clion_exist.stat.exists == False
+
+- name: Move CLion folder
+  shell:
+    mv {{ clion_install_dir }}/CLion-* {{ clion_dir }}
+    creates="{{ clion_dir }}"
+
+- name: Create symlink
+  file:
+    src: "{{ clion_dir }}/bin/clion.sh"
+    dest: "{{ clion_bin }}"
+    state: link
+
+- name: Remove CLion archive
+  file:
+    path: "{{ clion_archive }}"
+    state: absent

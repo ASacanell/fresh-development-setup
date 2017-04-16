@@ -1,0 +1,8 @@
+---
+
+intellij_version: 2017.1.1
+intellij_install_dir: /opt
+intellij_bin: /usr/local/bin/idea
+
+intellij_dir: "{{ intellij_install_dir }}/idea-{{ intellij_version }}"
+intellij_archive: "{{ intellij_dir }}.tar.gz"

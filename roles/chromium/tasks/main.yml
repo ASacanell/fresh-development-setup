@@ -1,0 +1,13 @@
+---
+
+- name: Install Chromium for Manjaro
+  pacman:
+    name: chromium
+    state: latest
+  when: ansible_distribution == 'Manjaro Linux'
+
+- name: Install Chromium for Ubuntu or Debian
+  apt:
+    name: chromium
+    state: latest
+  when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'

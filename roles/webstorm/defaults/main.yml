@@ -1,0 +1,8 @@
+---
+
+webstorm_version: 2017.1.1
+webstorm_install_dir: /opt
+webstorm_bin: /usr/local/bin/webstorm
+
+webstorm_dir: "{{ webstorm_install_dir }}/webstorm-{{ webstorm_version }}"
+webstorm_archive: "{{ webstorm_dir }}.tar.gz"

@@ -1,0 +1,13 @@
+---
+
+- name: Install Atom for Manjaro
+  pacman:
+    name: atom
+    state: latest
+  when: ansible_distribution == 'Manjaro Linux'
+
+- name: Install Atom for Ubuntu or Debian
+  apt:
+    name: atom
+    state: latest
+  when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'

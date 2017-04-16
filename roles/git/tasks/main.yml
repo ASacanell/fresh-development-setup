@@ -1,0 +1,27 @@
+---
+
+- name: Install Git for Manjaro
+  pacman: 
+    name: git
+    state: latest
+  register: installation
+  when: ansible_distribution == 'Manjaro Linux'
+
+- name: Install Git for Ubuntu or Debian
+  apt:
+    name: git
+    state: latest
+  register: installation
+  when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'
+
+- name: Set username for git
+  git_config: 
+    name: user.name
+    value: "{{ username }}"    
+  when: installation|success
+
+- name: Set email for git
+  git_config: 
+    name: user.email
+    value: "{{ email }}"
+  when: installation|success
